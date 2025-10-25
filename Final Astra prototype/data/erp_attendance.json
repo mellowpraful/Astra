@@ -1,0 +1,12 @@
+[
+  { "id": "A1", "studentId": "ST001", "studentName": "John Doe", "status": "present", "date": "2025-09-25", "time": "09:05" },
+  { "id": "A2", "studentId": "ST002", "studentName": "Jane Smith", "status": "absent", "date": "2025-09-25", "time": "09:05" },
+  { "id": "A3", "studentId": "ST003", "studentName": "Mike Johnson", "status": "present", "date": "2025-09-25", "time": "09:03" },
+  { "id": "A4", "studentId": "ST004", "studentName": "Emily Davis", "status": "present", "date": "2025-09-25", "time": "08:59" },
+  { "id": "A5", "studentId": "ST005", "studentName": "Robert Brown", "status": "present", "date": "2025-09-25", "time": "09:10" },
+  { "id": "A6", "studentId": "ST006", "studentName": "Sophia Wilson", "status": "present", "date": "2025-09-25", "time": "09:00" },
+  { "id": "A7", "studentId": "ST007", "studentName": "David Lee", "status": "late", "date": "2025-09-25", "time": "09:12" },
+  { "id": "A8", "studentId": "ST008", "studentName": "Olivia Martinez", "status": "present", "date": "2025-09-25", "time": "08:58" },
+  { "id": "A9", "studentId": "ST009", "studentName": "Chris Anderson", "status": "absent", "date": "2025-09-25", "time": "09:05" },
+  { "id": "A10", "studentId": "ST010", "studentName": "Grace Taylor", "status": "present", "date": "2025-09-25", "time": "09:02" }
+]

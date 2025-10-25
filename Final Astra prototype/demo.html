@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Management System - Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .demo-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 3rem;
+            max-width: 600px;
+            text-align: center;
+            margin: 2rem;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #6c757d;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .feature h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+            margin: 1rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="logo">
+            <div class="logo"><img src="assets/astra_logo.png" alt="Astra" style="height:40px;transform:scale(2.35);"></div>
+        </div>
+    <h1>Astra</h1>
+    <p class="subtitle">Complete School & College Management System</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Modules</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Responsive</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Setup Required</div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>👨‍🎓 Student Management</h3>
+                <p>Complete student lifecycle management from admission to graduation</p>
+            </div>
+            <div class="feature">
+                <h3>👨‍🏫 Teacher Management</h3>
+                <p>Faculty profiles, scheduling, and performance tracking</p>
+            </div>
+            <div class="feature">
+                <h3>📚 Course Management</h3>
+                <p>Curriculum design, subject tracking, and academic planning</p>
+            </div>
+            <div class="feature">
+                <h3>✅ Attendance System</h3>
+                <p>Digital attendance marking with real-time tracking</p>
+            </div>
+            <div class="feature">
+                <h3>💰 Fee Management</h3>
+                <p>Payment processing, fee tracking, and financial reports</p>
+            </div>
+            <div class="feature">
+                <h3>📝 Examination</h3>
+                <p>Exam scheduling, grade management, and result processing</p>
+            </div>
+            <div class="feature">
+                <h3>📖 Library System</h3>
+                <p>Book catalog, borrowing system, and inventory management</p>
+            </div>
+            <div class="feature">
+                <h3>📈 Analytics</h3>
+                <p>Comprehensive reports and data visualization</p>
+            </div>
+        </div>
+        
+        <a href="login.html" class="btn">Launch ERP System</a>
+        <a href="README.md" class="btn" style="background: #6c757d;">View Documentation</a>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Astra</title>
+    <link rel="stylesheet" href="styles.css?v=20250928-1">
+    <style>
+    /* Minimal modal for admin confirmations */
+    .seed-modal { display:none; position:fixed; left:0; right:0; top:0; bottom:0; background:rgba(0,0,0,0.45); z-index:99999; align-items:center; justify-content:center; }
+    .seed-modal .modal-box { background:#fff; padding:1.25rem; border-radius:8px; width:420px; max-width:90%; box-shadow:0 8px 24px rgba(0,0,0,0.18); }
+    .seed-modal .modal-actions { text-align:right; margin-top:0.75rem; }
+    .seed-modal .modal-actions .btn { margin-left:0.5rem; }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="user-admin">
+    <div class="container">
+        <!-- Admin Header -->
+        <header class="header">
+            <div class="logo"><img src="assets/astra_logo.png" alt="Astra" style="height:40px;transform:scale(2.35);"></div>
+
+            <!-- Admin Navigation Menu -->
+            <nav class="header-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-module="dashboard" data-target-url="admin.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-module="users" data-target-url="admin_users.html">
+                        <i class="fas fa-users-cog"></i>
+                        <span>User Management</span>
+                    </li>
+                    <li class="nav-item" data-module="students" data-target-url="admin_students.html">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Students</span>
+                    </li>
+                    <li class="nav-item" data-module="teachers" data-target-url="admin_teachers.html">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Teachers</span>
+                    </li>
+                    <li class="nav-item" data-module="courses" data-target-url="admin_courses.html">
+                        <i class="fas fa-book"></i>
+                        <span>Courses</span>
+                    </li>
+                    <li class="nav-item" data-module="hostel" data-target-url="admin_hostel.html">
+                        <i class="fas fa-building"></i>
+                        <span>Hostel</span>
+                    </li>
+                    <li class="nav-item" data-module="system" data-target-url="admin_system.html">
+                        <i class="fas fa-server"></i>
+                        <span>System</span>
+                    </li>
+                    <li class="nav-item" data-module="reports" data-target-url="admin_reports.html">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Admin Header Controls -->
+            <div class="header-user-controls">
+                <div class="user-info-header" id="userInfoHeader">
+                    <span>Welcome, Administrator</span>
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn notification-btn" title="System Alerts">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">8</span>
+                    </button>
+                    <button class="header-btn" title="Re-seed Demo Data" onclick="reseedDemoData()" id="btnReseed">
+                        <i class="fas fa-seedling"></i>
+                    </button>
+                    <button class="header-btn" title="Re-seed Attendance" onclick="reseedAttendance()" id="btnReseedAttendance">
+                        <i class="fas fa-calendar-plus"></i>
+                    </button>
+                    <button class="header-btn" title="Export Attendance" onclick="exportAttendance()" id="btnExportAttendance">
+                        <i class="fas fa-file-export"></i>
+                    </button>
+                    <button class="header-btn" title="Save Seeds to Server" onclick="saveSeedsToServer()" id="btnSaveSeeds">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </button>
+                    <button class="header-btn" title="Reset + Save" onclick="confirmResetAndSave()" id="btnResetSave">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="header-btn profile-btn" title="Admin Profile" onclick="openProfileMenu()">
+                        <i class="fas fa-user-shield"></i>
+                    </button>
+                    <button class="header-btn logout-btn" onclick="logout()" title="Logout" id="logoutButton">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="btn-text">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Admin Main Content -->
+        <main class="main-content">
+            <!-- Admin Welcome Section -->
+            <div class="user-info user-info-admin">
+                <span>Welcome, Administrator</span>
+                <i class="fas fa-user-shield"></i>
+            </div>
+
+            <!-- Admin Dashboard -->
+            <div id="dashboard" class="module active">
+                <div class="module-header">
+                    <h2>System Administration Dashboard</h2>
+                    <div class="admin-actions">
+                        <button class="btn btn-primary" onclick="systemHealthCheck()">
+                            <i class="fas fa-heartbeat"></i> System Health
+                        </button>
+                        <button class="btn btn-success" onclick="createBackup()">
+                            <i class="fas fa-download"></i> Create Backup
+                        </button>
+                        <button class="btn btn-warning" onclick="viewSystemLogs()">
+                            <i class="fas fa-file-alt"></i> System Logs
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="admin-stats-grid">
+                    <div class="stat-card admin-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1,247</h3>
+                            <p>Total Users</p>
+                            <small>+15 this week</small>
+                        </div>
+                    </div>
+                    <div class="stat-card admin-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1,156</h3>
+                            <p>Active Students</p>
+                            <small>98.2% active rate</small>
+                        </div>
+                    </div>
+                    <div class="stat-card admin-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>91</h3>
+                            <p>Faculty Members</p>
+                            <small>5 new hires</small>
+                        </div>
+                    </div>
+                    <div class="stat-card admin-card">
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>3</h3>
+                            <p>System Alerts</p>
+                            <small>Requires attention</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Overview -->
+                <div class="admin-overview-grid">
+                    <div class="admin-section">
+                        <h3>System Performance</h3>
+                        <div class="performance-metrics">
+                            <div class="metric-item">
+                                <div class="metric-label">Server Uptime</div>
+                                <div class="metric-value">99.9%</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 99.9%"></div>
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-label">Database Performance</div>
+                                <div class="metric-value">95.2%</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 95.2%"></div>
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-label">Storage Usage</div>
+                                <div class="metric-value">67%</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 67%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3>Recent System Activity</h3>
+                        <div class="system-activity">
+                            <div class="activity-item">
+                                <i class="fas fa-user-plus text-success"></i>
+                                <span>New student registration: John Smith</span>
+                                <small>2 hours ago</small>
+                            </div>
+                            <div class="activity-item">
+                                <i class="fas fa-database text-primary"></i>
+                                <span>Automated backup completed successfully</span>
+                                <small>4 hours ago</small>
+                            </div>
+                            <div class="activity-item">
+                                <i class="fas fa-exclamation-triangle text-warning"></i>
+                                <span>High server load detected</span>
+                                <small>6 hours ago</small>
+                            </div>
+                            <div class="activity-item">
+                                <i class="fas fa-shield-alt text-success"></i>
+                                <span>Security scan completed - no threats</span>
+                                <small>1 day ago</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3>Recent Login History (Demo)</h3>
+                        <div class="widget">
+                            <div class="list">
+                                <div class="list-item"><span>ADM001 • 2025-09-26 09:12</span><small>Chrome • HQ</small></div>
+                                <div class="list-item"><span>ADM001 • 2025-09-25 18:04</span><small>Edge • HQ</small></div>
+                                <div class="list-item"><span>ADM001 • 2025-09-25 08:47</span><small>Chrome • HQ</small></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3>Students (Demo)</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>Name</th><th>Student ID</th><th>Branch</th><th>Semester</th><th>Course</th><th>Email</th><th>Attendance</th></tr>
+                                </thead>
+                                <tbody id="adminStudentList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3>Teachers (Demo)</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>Name</th><th>Department</th><th>Subject</th><th>Email</th></tr>
+                                </thead>
+                                <tbody id="adminTeacherList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3>Quick Actions</h3>
+                        <div class="quick-actions-grid">
+                            <button class="quick-action-btn" onclick="bulkUserImport()">
+                                <i class="fas fa-upload"></i>
+                                <span>Bulk Import Users</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="generateReports()">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Generate Reports</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="systemMaintenance()">
+                                <i class="fas fa-tools"></i>
+                                <span>System Maintenance</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="userPermissions()">
+                                <i class="fas fa-key"></i>
+                                <span>Manage Permissions</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="window.location.href='demo_seed_view.html'">
+                                <i class="fas fa-database"></i>
+                                <span>View Seeds</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management Module -->
+            <div id="users" class="module">
+                <div class="module-header">
+                    <h2>User Management</h2>
+                    <div class="user-management-actions">
+                        <button class="btn btn-primary" onclick="addNewUser()">
+                            <i class="fas fa-user-plus"></i> Add User
+                        </button>
+                        <button class="btn btn-success" onclick="bulkUserImport()">
+                            <i class="fas fa-upload"></i> Bulk Import
+                        </button>
+                        <button class="btn btn-outline" onclick="exportUsers()">
+                            <i class="fas fa-download"></i> Export Users
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="user-management-stats">
+                    <div class="user-stat-card">
+                        <h4>Total Users</h4>
+                        <div class="stat-number">1,247</div>
+                        <div class="stat-change positive">+15 this week</div>
+                    </div>
+                    <div class="user-stat-card">
+                        <h4>Active Sessions</h4>
+                        <div class="stat-number">234</div>
+                        <div class="stat-change">Currently online</div>
+                    </div>
+                    <div class="user-stat-card">
+                        <h4>Pending Approvals</h4>
+                        <div class="stat-number">7</div>
+                        <div class="stat-change negative">Requires action</div>
+                    </div>
+                </div>
+
+                <div class="user-management-table">
+                    <div class="table-filters">
+                        <select class="filter-select">
+                            <option>All Users</option>
+                            <option>Students</option>
+                            <option>Teachers</option>
+                            <option>Administrators</option>
+                        </select>
+                        <input type="text" class="filter-search" placeholder="Search users...">
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">JD</div>
+                                        <div class="user-details">
+                                            <div class="user-name">John Doe</div>
+                                            <div class="user-email">john.doe@student.edu</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="role-badge student">Student</span></td>
+                                <td><span class="status-badge active">Active</span></td>
+                                <td>2 hours ago</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view-btn" title="View"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- More user rows... -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System Settings Module -->
+            <div id="system" class="module">
+                <div class="module-header">
+                    <h2>System Settings</h2>
+                </div>
+                
+                <div class="system-settings-grid">
+                    <div class="settings-section">
+                        <h3>General Settings</h3>
+                        <div class="setting-item">
+                            <label>Institution Name</label>
+                            <input type="text" value="Astra University" class="setting-input">
+                        </div>
+                        <div class="setting-item">
+                            <label>Academic Year</label>
+                            <select class="setting-select">
+                                <option>2024-2025</option>
+                                <option>2025-2026</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Default Language</label>
+                            <select class="setting-select">
+                                <option>English</option>
+                                <option>Spanish</option>
+                                <option>French</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Security Settings</h3>
+                        <div class="setting-item">
+                            <label class="setting-checkbox">
+                                <input type="checkbox" checked>
+                                <span>Enable Two-Factor Authentication</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-checkbox">
+                                <input type="checkbox" checked>
+                                <span>Password Expiry (90 days)</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-checkbox">
+                                <input type="checkbox">
+                                <span>Enable Login Notifications</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>System Maintenance</h3>
+                        <div class="maintenance-actions">
+                            <button class="btn btn-outline maintenance-btn">
+                                <i class="fas fa-broom"></i>
+                                <span>Clean Temporary Files</span>
+                            </button>
+                            <button class="btn btn-outline maintenance-btn">
+                                <i class="fas fa-database"></i>
+                                <span>Optimize Database</span>
+                            </button>
+                            <button class="btn btn-outline maintenance-btn">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Security Scan</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Admin Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Admin Portal</h3>
+                    <p>Complete system administration and management</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Administration</h4>
+                    <ul class="footer-links">
+                        <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="#users">User Management</a></li>
+                        <li><a href="#system">System Settings</a></li>
+                        <li><a href="#reports">Reports</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>System</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">System Logs</a></li>
+                        <li><a href="#">Backup & Restore</a></li>
+                        <li><a href="#">Security Center</a></li>
+                        <li><a href="#">API Documentation</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js?v=20250928-1"></script>
+    <script>
+        (function(){
+            var items = document.querySelectorAll('.nav-item[data-target-url]');
+            items.forEach(function(item){
+                item.addEventListener('click', function(){
+                    var url = this.getAttribute('data-target-url');
+                    if(url){ window.location.href = url; }
+                });
+            });
+        })();
+    </script>
+    <script>
+        // Set user type for admin portal
+        document.addEventListener('DOMContentLoaded', function () {
+                const adminUser = {
+                userType: 'admin',
+                fullName: 'System Administrator',
+                email: 'admin@astra.edu',
+                adminId: 'ADM001',
+                permissions: ['all'],
+                loginTime: new Date().toISOString()
+            };
+            localStorage.setItem('erp_user_data', JSON.stringify(adminUser));
+            currentUser = adminUser;
+        });
+    </script>
+    <!-- Modal markup for confirmations -->
+    <div id="seedModal" class="seed-modal" aria-hidden="true">
+        <div class="modal-box">
+            <div class="modal-body" id="seedModalBody">Are you sure?</div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeSeedModal()">Cancel</button>
+                <button class="btn btn-primary" id="seedModalConfirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

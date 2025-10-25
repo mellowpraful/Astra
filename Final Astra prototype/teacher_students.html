@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher • Students</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="user-teacher">
+    <div class="container">
+        <header class="header">
+            <div class="logo"><img src="assets/astra_logo.png" alt="Astra" style="height:40px;transform:scale(2.35);"></div>
+            <nav class="header-nav"><ul class="nav-menu">
+                <li class="nav-item" data-target-url="teacher.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></li>
+                <li class="nav-item" data-target-url="teacher_classes.html"><i class="fas fa-chalkboard"></i><span>My Classes</span></li>
+                <li class="nav-item active" data-target-url="teacher_students.html"><i class="fas fa-user-graduate"></i><span>Students</span></li>
+                <li class="nav-item" data-target-url="teacher_grading.html"><i class="fas fa-edit"></i><span>Grading</span></li>
+                <li class="nav-item" data-target-url="teacher_attendance.html"><i class="fas fa-calendar-check"></i><span>Attendance</span></li>
+                <li class="nav-item" data-target-url="teacher_assignments.html"><i class="fas fa-clipboard-list"></i><span>Assignments</span></li>
+                <li class="nav-item" data-target-url="teacher_reports.html"><i class="fas fa-chart-bar"></i><span>Reports</span></li>
+            </ul></nav>
+            <div class="header-user-controls"><div class="header-actions">
+                <button class="header-btn notification-btn"><i class="fas fa-bell"></i><span class="notification-badge">5</span></button>
+                <button class="header-btn profile-btn" onclick="openProfileMenu()"><i class="fas fa-chalkboard-teacher"></i></button>
+                <button class="header-btn logout-btn" onclick="logout()" id="logoutButton"><i class="fas fa-sign-out-alt"></i><span class="btn-text">Logout</span></button>
+            </div></div>
+        </header>
+        <main class="main-content">
+            <div class="module-header"><h2>My Students</h2></div>
+            <div class="info-grid" style="margin-bottom:1rem;">
+                <div class="info-card">
+                    <h4>Filters</h4>
+                    <div class="key-value">
+                        <div class="key">Branch</div><div class="val"><select id="sfltBranch"><option value="">All</option><option>CSE</option><option>MTH</option><option>PHY</option></select></div>
+                        <div class="key">Course</div><div class="val"><select id="sfltCourse"><option value="">All</option><option>CS101</option><option>CS201</option><option>MTH201</option><option>PHY150</option></select></div>
+                        <div class="key">Semester</div><div class="val"><select id="sfltSem"><option value="">All</option><option>3</option><option>5</option><option>7</option></select></div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h4>Performance Search</h4>
+                    <div class="key-value">
+                        <div class="key">Student ID</div><div class="val"><input type="text" id="perfStudentId" placeholder="ST001"></div>
+                        <div class="key">&nbsp;</div><div class="val"><button class="btn btn-primary" id="btnPerfSearch"><i class="fas fa-search"></i> Search</button></div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-container"><table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Branch</th><th>Course</th><th>Sem</th><th>Attendance</th></tr></thead><tbody id="teacherStudentsTable"></tbody></table></div>
+            <div class="widget" style="margin-top:1rem;">
+                <h4>Subject-wise Marks</h4>
+                <div id="perfSummary">Search a student to view performance.</div>
+                <canvas id="perfChart" height="120"></canvas>
+            </div>
+        </main>
+        <script>
+        (function(){
+            function uniq(arr){ return Array.from(new Set(arr.filter(Boolean))); }
+            function badge(p){ if(p==null) return '<span class="badge badge-gray">N/A</span>'; if(p<50) return '<span class="badge badge-red">'+p+'%</span>'; if(p<75) return '<span class="badge badge-yellow">'+p+'%</span>'; return '<span class="badge badge-green">'+p+'%</span>'; }
+            function getData(){ return JSON.parse(localStorage.getItem('erp_students')||'[]'); }
+            function populateFilters(){
+                try{
+                    var data=getData();
+                    var branches=uniq(data.map(function(x){return x.branch;}));
+                    var courses=uniq([].concat.apply([], data.map(function(x){ return (x.subjects||[]).concat([x.course]).filter(Boolean); })));
+                    var semesters=uniq(data.map(function(x){return String(x.semester);})).sort();
+                    function fill(sel, items){ var el=document.getElementById(sel); if(!el) return; var cur=el.value; el.innerHTML='<option value="">All</option>'+items.map(function(v){return '<option>'+v+'</option>';}).join(''); if(cur&&items.indexOf(cur)>-1){ el.value=cur; } }
+                    fill('sfltBranch', branches);
+                    fill('sfltCourse', courses);
+                    fill('sfltSem', semesters);
+                }catch(e){}
+            }
+            populateFilters();
+            function render(){
+                var data=getData();
+                var b=document.getElementById('sfltBranch').value||'';
+                var c=document.getElementById('sfltCourse').value||'';
+                var s=document.getElementById('sfltSem').value||'';
+                if(b) data=data.filter(function(x){return x.branch===b});
+                if(c) data=data.filter(function(x){return (x.course===c)||((x.subjects||[]).indexOf(c)>-1)});
+                if(s) data=data.filter(function(x){return String(x.semester)===String(s)});
+                var tbody=document.getElementById('teacherStudentsTable');
+                tbody.innerHTML=data.map(function(st){
+                    return '<tr>'+
+                    '<td>'+(st.studentId||st.rollNo||('-'+st.id))+'</td>'+
+                    '<td>'+(st.name||'-')+'</td>'+
+                    '<td>'+(st.email||'-')+'</td>'+
+                    '<td>'+(st.branch||'-')+'</td>'+
+                    '<td>'+(st.course||'-')+'</td>'+
+                    '<td>'+(st.semester||'-')+'</td>'+
+                    '<td>'+badge(Number(st.attendancePct))+'</td>'+
+                    '</tr>';
+                }).join('');
+            }
+            ['sfltBranch','sfltCourse','sfltSem'].forEach(function(id){ var el=document.getElementById(id); if(el){ el.addEventListener('change',render); }});
+            document.getElementById('btnPerfSearch').addEventListener('click', function(){
+                var q=(document.getElementById('perfStudentId').value||'').trim().toLowerCase();
+                var students=getData();
+                var st=students.find(function(x){ return (String(x.studentId||'').toLowerCase()===q) || (String(x.rollNo||'').toLowerCase()===q); });
+                var summary=document.getElementById('perfSummary');
+                if(!st){ summary.textContent='Student not found'; return; }
+                summary.textContent=st.name+' ('+(st.studentId||st.rollNo)+') • Branch '+(st.branch||'-')+' • Sem '+(st.semester||'-');
+                try {
+                    var exams = JSON.parse(localStorage.getItem('erp_examinations')||'[]');
+                    var rows = exams.filter(function(e){ return String(e.studentId||e.student||'').toLowerCase()===(String(st.studentId||st.rollNo).toLowerCase()); });
+                    var bySub = {};
+                    rows.forEach(function(r){ var key=r.subject||r.course||'Unknown'; bySub[key]=Math.max(bySub[key]||0, Number(r.marks||r.score||0)); });
+                    var labels=Object.keys(bySub); var data=labels.map(function(k){return bySub[k];});
+                    var ctx=document.getElementById('perfChart').getContext('2d');
+                    if(window.__perfChart){ window.__perfChart.destroy(); }
+                    window.__perfChart=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[{label:'Marks',data:data,backgroundColor:'#3b82f6'}]},options:{scales:{y:{beginAtZero:true,max:100}}}});
+                } catch(e) { /* ignore */ }
+            });
+            render();
+        })();
+        </script>
+        <footer class="footer"><div class="footer-content"><div class="footer-section"><h3>Teacher Portal</h3><p>Empowering educators, inspiring students</p></div></div></footer>
+    </div>
+    <script src="script.js"></script>
+    <script>document.querySelectorAll('.nav-item[data-target-url]').forEach(function(i){i.addEventListener('click',function(){var u=this.getAttribute('data-target-url');if(u){location.href=u;}})});</script>
+</body>
+</html>
+
+

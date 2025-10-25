@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin • Courses</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="user-admin">
+    <div class="container">
+        <header class="header">
+            <div class="logo"><img src="assets/astra_logo.png" alt="Astra" style="height:40px;transform:scale(2.35);"></div>
+            <nav class="header-nav"><ul class="nav-menu">
+                <li class="nav-item" data-module="dashboard" data-target-url="admin.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></li>
+                <li class="nav-item" data-module="users" data-target-url="admin_users.html"><i class="fas fa-users-cog"></i><span>User Management</span></li>
+                <li class="nav-item" data-module="students" data-target-url="admin_students.html"><i class="fas fa-user-graduate"></i><span>Students</span></li>
+                <li class="nav-item" data-module="teachers" data-target-url="admin_teachers.html"><i class="fas fa-chalkboard-teacher"></i><span>Teachers</span></li>
+                <li class="nav-item active" data-module="courses" data-target-url="admin_courses.html"><i class="fas fa-book"></i><span>Courses</span></li>
+                <li class="nav-item" data-module="hostel" data-target-url="admin_hostel.html"><i class="fas fa-building"></i><span>Hostel</span></li>
+                <li class="nav-item" data-module="system" data-target-url="admin_system.html"><i class="fas fa-server"></i><span>System</span></li>
+                <li class="nav-item" data-module="reports" data-target-url="admin_reports.html"><i class="fas fa-chart-bar"></i><span>Reports</span></li>
+            </ul></nav>
+            <div class="header-user-controls"><div class="header-actions"><button class="header-btn notification-btn"><i class="fas fa-bell"></i><span class="notification-badge">8</span></button><button class="header-btn profile-btn" onclick="openProfileMenu()"><i class="fas fa-user-shield"></i></button><button class="header-btn logout-btn" onclick="logout()" id="logoutButton"><i class="fas fa-sign-out-alt"></i><span class="btn-text">Logout</span></button></div></div>
+        </header>
+        <main class="main-content">
+            <div class="module-header"><h2>Course Management</h2><button class="btn btn-primary"><i class="fas fa-plus"></i> Add Course</button></div>
+            <div class="search-bar"><input type="text" placeholder="Search courses..."><i class="fas fa-search"></i></div>
+            <div class="table-container"><table class="data-table"><thead><tr><th>Course Code</th><th>Course Name</th><th>Department</th><th>Duration</th><th>Credits</th><th>Actions</th></tr></thead><tbody><tr><td>CS101</td><td>Computer Science 101</td><td>Computer Science</td><td>1 semester</td><td>4</td><td><div class="action-buttons"><button class="action-btn view-btn"><i class="fas fa-eye"></i></button><button class="action-btn edit-btn"><i class="fas fa-edit"></i></button><button class="action-btn delete-btn"><i class="fas fa-trash"></i></button></div></td></tr></tbody></table></div>
+        </main>
+        <footer class="footer"><div class="footer-content"><div class="footer-section"><h3>Admin Portal</h3><p>Complete system administration and management</p></div></div></footer>
+    </div>
+    <script src="script.js"></script>
+    <script>document.querySelectorAll('.nav-item[data-target-url]').forEach(function(i){i.addEventListener('click',function(){var u=this.getAttribute('data-target-url');if(u){location.href=u;}})});</script>
+</body>
+</html>
+
+

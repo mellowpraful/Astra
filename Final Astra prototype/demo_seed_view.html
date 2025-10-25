@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Demo Seed Viewer</title>
+  <link rel="stylesheet" href="styles.css?v=20250928-1">
+</head>
+<body class="user-admin">
+  <div class="container">
+    <header class="header">
+            <div class="logo"><img src="assets/astra_logo.png" alt="Astra" style="height:40px;transform:scale(2.35);"></div>
+      <div class="header-actions">
+        <a class="btn btn-outline" href="admin.html">Back to Admin</a>
+      </div>
+    </header>
+    <main class="main-content">
+      <h2>ERP Seed Data</h2>
+      <section>
+        <h3>Students</h3>
+        <div class="table-container"><table class="data-table"><thead><tr><th>ID</th><th>Student ID</th><th>Name</th><th>Email</th><th>Course</th><th>Branch</th><th>Sem</th><th>Attendance%</th></tr></thead><tbody id="svStudents"></tbody></table></div>
+      </section>
+
+      <section>
+        <h3>Examinations</h3>
+        <div class="table-container"><table class="data-table"><thead><tr><th>ID</th><th>StudentID</th><th>Exam</th><th>Subject</th><th>Date</th><th>Marks</th></tr></thead><tbody id="svExams"></tbody></table></div>
+      </section>
+
+      <section>
+        <h3>Attendance</h3>
+        <div class="table-container"><table class="data-table"><thead><tr><th>ID</th><th>StudentID</th><th>Name</th><th>Date</th><th>Time</th><th>Status</th></tr></thead><tbody id="svAtt"></tbody></table></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="script.js?v=20250928-1"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      try {
+        var studs = JSON.parse(localStorage.getItem('erp_students')||'[]');
+        var exs = JSON.parse(localStorage.getItem('erp_examinations')||'[]');
+        var ats = JSON.parse(localStorage.getItem('erp_attendance')||'[]');
+
+        var sT = document.getElementById('svStudents');
+        sT.innerHTML = studs.map(function(s){ return '<tr><td>'+s.id+'</td><td>'+s.studentId+'</td><td>'+s.name+'</td><td>'+s.email+'</td><td>'+s.course+'</td><td>'+s.branch+'</td><td>'+s.semester+'</td><td>'+ (s.attendancePct||'-') +'</td></tr>'; }).join('');
+
+        var eT = document.getElementById('svExams');
+        eT.innerHTML = exs.map(function(e){ return '<tr><td>'+e.id+'</td><td>'+e.studentId+'</td><td>'+e.exam+'</td><td>'+ (e.subject||'') +'</td><td>'+ (e.date||'') +'</td><td>'+ (e.marks||'') +'</td></tr>'; }).join('');
+
+        var aT = document.getElementById('svAtt');
+        aT.innerHTML = ats.map(function(a){ return '<tr><td>'+a.id+'</td><td>'+a.studentId+'</td><td>'+a.studentName+'</td><td>'+a.date+'</td><td>'+a.time+'</td><td>'+a.status+'</td></tr>'; }).join('');
+      } catch(e){ console.error(e); }
+    });
+  </script>
+</body>
+</html>

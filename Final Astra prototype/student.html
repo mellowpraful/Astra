@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Astra</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="user-student">
+    <div class="container">
+        <!-- Student Header -->
+        <header class="header">
+            <div class="logo"><img src="assets/astra_logo.png" alt="Astra" style="height:40px;transform:scale(2.35);"></div>
+
+            <!-- Student Navigation Menu -->
+            <nav class="header-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-module="dashboard" data-target-url="student.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-module="courses" data-target-url="student_courses.html">
+                        <i class="fas fa-book"></i>
+                        <span>My Courses</span>
+                    </li>
+                    <li class="nav-item" data-module="grades" data-target-url="student_grades.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Grades</span>
+                    </li>
+                    <li class="nav-item" data-module="attendance" data-target-url="student_attendance.html">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Attendance</span>
+                    </li>
+                    <li class="nav-item" data-module="assignments" data-target-url="student_assignments.html">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Assignments</span>
+                    </li>
+                    <li class="nav-item" data-module="schedule" data-target-url="student_schedule.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Schedule</span>
+                    </li>
+                    <li class="nav-item" data-module="lms" data-target-url="student_lms.html">
+                        <i class="fas fa-laptop-code"></i>
+                        <span>LMS</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Student Header Controls -->
+            <div class="header-user-controls">
+                <div class="header-actions">
+                    <button class="header-btn notification-btn" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">2</span>
+                    </button>
+                    <button class="header-btn profile-btn" title="Profile" onclick="openProfileMenu()">
+                        <i class="fas fa-user-graduate"></i>
+                    </button>
+                    <button class="header-btn logout-btn" onclick="logout()" title="Logout" id="logoutButton">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="btn-text">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Student Main Content -->
+        <main class="main-content">
+            <!-- Student Welcome Section -->
+            <div class="user-info user-info-student">
+                <span>Welcome, Student</span>
+                <i class="fas fa-user-graduate"></i>
+            </div>
+
+            <!-- Student Dashboard -->
+            <div id="dashboard" class="module active">
+                <div class="module-header">
+                    <h2>Student Dashboard</h2>
+                    <div class="student-actions">
+                        <button class="btn btn-primary" onclick="viewMyGrades()">
+                            <i class="fas fa-chart-line"></i> My Grades
+                        </button>
+                        <button class="btn btn-success" onclick="viewSchedule()">
+                            <i class="fas fa-calendar"></i> My Schedule
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="student-stats-grid">
+                    <div class="stat-card student-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>6</h3>
+                            <p>Enrolled Courses</p>
+                            <small>This semester</small>
+                        </div>
+                    </div>
+                    <div class="stat-card student-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>92%</h3>
+                            <p>Average Grade</p>
+                        </div>
+                    </div>
+                    <div class="stat-card student-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>95%</h3>
+                            <p>Attendance Rate</p>
+                            <small>This month</small>
+                        </div>
+                    </div>
+                    <div class="stat-card student-card">
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>3</h3>
+                            <p>Pending Assignments</p>
+                            <small>Due this week</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="student-content-grid">
+                    <div class="student-section">
+                        <h3>My Courses</h3>
+                        <div class="course-list">
+                            <div class="course-item">
+                                <div class="course-info">
+                                    <h4>Computer Science 101</h4>
+                                    <p>Prof. Sarah Wilson</p>
+                                </div>
+                                <div class="course-grade">A-</div>
+                            </div>
+                            <div class="course-item">
+                                <div class="course-info">
+                                    <h4>Mathematics 201</h4>
+                                    <p>Prof. David Brown</p>
+                                </div>
+                                <div class="course-grade">B+</div>
+                            </div>
+                            <div class="course-item">
+                                <div class="course-info">
+                                    <h4>Physics 150</h4>
+                                    <p>Dr. James Thompson</p>
+                                </div>
+                                <div class="course-grade">A</div>
+                            </div>
+                            <div class="course-item">
+                                <div class="course-info">
+                                    <h4>Chemistry 120</h4>
+                                    <p>Dr. Lisa Anderson</p>
+                                </div>
+                                <div class="course-grade">B</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="student-section">
+                        <h3>Upcoming Deadlines</h3>
+                        <div class="deadline-list">
+                            <div class="deadline-item urgent">
+                                <div class="deadline-info">
+                                    <h4>Physics Lab Report</h4>
+                                    <p>Due: Tomorrow</p>
+                                </div>
+                                <div class="deadline-status">Urgent</div>
+                            </div>
+                            <div class="deadline-item">
+                                <div class="deadline-info">
+                                    <h4>Math Assignment 5</h4>
+                                    <p>Due: Friday</p>
+                                </div>
+                                <div class="deadline-status">Pending</div>
+                            </div>
+                            <div class="deadline-item">
+                                <div class="deadline-info">
+                                    <h4>CS Project Presentation</h4>
+                                    <p>Due: Next Week</p>
+                                </div>
+                                <div class="deadline-status">In Progress</div>
+                            </div>
+                            <div class="deadline-item">
+                                <div class="deadline-info">
+                                    <h4>Chemistry Quiz</h4>
+                                    <p>Due: Monday</p>
+                                </div>
+                                <div class="deadline-status">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="student-section">
+                        <h3>Profile & Records (Demo)</h3>
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <h4>Student Profile</h4>
+                                <div class="key-value" id="studentProfileKV"></div>
+                            </div>
+
+                            <div class="info-card">
+                                <h4>Documents (Read-only)</h4>
+                                <div class="list">
+                                    <div class="list-item"><span>Admission Form.pdf</span><small>Verified</small></div>
+                                    <div class="list-item"><span>10th Marksheet.pdf</span><small>Verified</small></div>
+                                    <div class="list-item"><span>ID Proof.pdf</span><small>Verified</small></div>
+                                    <div class="list-item"><span>Transfer Certificate.pdf</span><small>Pending</small></div>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <h4>Attendance Summary</h4>
+                                <div class="key-value">
+                                    <div class="key">This Month</div><div class="val"><span class="badge badge-green">82%</span></div>
+                                    <div class="key">Last Month</div><div class="val"><span class="badge badge-yellow">68%</span></div>
+                                    <div class="key">Overall</div><div class="val"><span class="badge badge-green">78%</span></div>
+                                </div>
+                                <small>Rule: < 50% red, 50-75% yellow, > 75% green</small>
+                            </div>
+
+                            <div class="info-card">
+                                <h4>Fees Details</h4>
+                                <div class="table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr><th>Date</th><th>Receipt</th><th>Amount</th><th>Status</th></tr>
+                                        </thead>
+                                        <tbody id="feesTbody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <h4>Hostel Allocation</h4>
+                                <div class="key-value" id="hostelKV"></div>
+                            </div>
+
+                            <div class="info-card">
+                                <h4>Exam & Results</h4>
+                                <div class="table-container">
+                                    <table class="data-table">
+                                        <thead><tr><th>Exam</th><th>Course</th><th>Date</th><th>Result</th></tr></thead>
+                                        <tbody id="examTbody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <h4>Login History</h4>
+                                <div class="list">
+                                    <div class="list-item"><span>2025-09-26 10:12</span><small>Chrome • Delhi</small></div>
+                                    <div class="list-item"><span>2025-09-25 21:04</span><small>Mobile • Delhi</small></div>
+                                    <div class="list-item"><span>2025-09-25 08:47</span><small>Chrome • Delhi</small></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Courses Module -->
+            <div id="courses" class="module">
+                <div class="module-header">
+                    <h2>My Courses</h2>
+                </div>
+                <div class="courses-grid">
+                    <div class="course-card">
+                        <div class="course-header">
+                            <h3>Computer Science 101</h3>
+                            <div class="course-grade-badge">A-</div>
+                        </div>
+                        <p class="course-instructor">Prof. Sarah Wilson</p>
+                        <p class="course-schedule">Mon, Wed, Fri - 10:00 AM</p>
+                        <div class="course-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <span>75% Complete</span>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-sm btn-primary">View Materials</button>
+                            <button class="btn btn-sm btn-outline">Assignments</button>
+                        </div>
+                    </div>
+                    <!-- More course cards... -->
+                </div>
+            </div>
+
+            <!-- Student Grades  -->
+            <div id="grades" class="module">
+                <div class="module-header">
+                    <h2>My Grades</h2>
+                </div>
+                <div class="grades-summary">
+                    <div class="gpa-card">
+                        <h3>Current GPA</h3>
+                        <div class="gpa-value">9.2</div>
+                        <p>Semester GPA: 9.2</p>
+                    </div>
+                </div>
+                <div class="grades-table">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Assignment</th>
+                                <th>Grade</th>
+                                <th>Weight</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Computer Science 101</td>
+                                <td>Midterm Exam</td>
+                                <td><span class="grade-badge grade-a">A-</span></td>
+                                <td>30%</td>
+                                <td>Oct 15, 2024</td>
+                            </tr>
+                            <!-- More grade rows... -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Other student modules... -->
+        </main>
+
+        <!-- Student Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Student Portal</h3>
+                    <p>Your gateway to academic success</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="#courses">My Courses</a></li>
+                        <li><a href="#grades">Grades</a></li>
+                        <li><a href="#schedule">Schedule</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Academic Advisor</a></li>
+                        <li><a href="#">IT Help Desk</a></li>
+                        <li><a href="#">Student Services</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Force page navigation for student portal header
+        (function(){
+            var items = document.querySelectorAll('.nav-item[data-target-url]');
+            items.forEach(function(item){
+                item.addEventListener('click', function(e){
+                    var url = this.getAttribute('data-target-url');
+                    if(url){ window.location.href = url; }
+                });
+            });
+        })();
+    </script>
+    <script>
+        // Set user type for student portal
+        document.addEventListener('DOMContentLoaded', function () {
+            const studentUser = {
+                userType: 'student',
+                fullName: 'Pratiksha Jawale',
+                email: 'john.doe@student.edu',
+                studentId: 'STU001',
+                loginTime: new Date().toISOString()
+            };
+            localStorage.setItem('erp_user_data', JSON.stringify(studentUser));
+            currentUser = studentUser;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher • Attendance</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons for the UI -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom scrollbar styling for the student list */
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: #a5b4fc; /* Indigo-300 */
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #eef2ff; /* Indigo-50 */
+        }
+        /* Style for date input icon display */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+        }
+        /* Ensures the font is applied */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+
+</head>
+<body class="user-teacher">
+    <div class="container">
+        <header class="header">
+            <div class="logo"><img src="assets/astra_logo.png" alt="Astra" style="height:40px;transform:scale(2.35);"></div>
+            <nav class="header-nav"><ul class="nav-menu">
+                <li class="nav-item" data-target-url="teacher.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></li>
+                <li class="nav-item" data-target-url="teacher_classes.html"><i class="fas fa-chalkboard"></i><span>My Classes</span></li>
+                <li class="nav-item" data-target-url="teacher_students.html"><i class="fas fa-user-graduate"></i><span>Students</span></li>
+                <li class="nav-item" data-target-url="teacher_grading.html"><i class="fas fa-edit"></i><span>Grading</span></li>
+                <li class="nav-item active" data-target-url="teacher_attendance.html"><i class="fas fa-calendar-check"></i><span>Attendance</span></li>
+                <li class="nav-item" data-target-url="teacher_assignments.html"><i class="fas fa-clipboard-list"></i><span>Assignments</span></li>
+                <li class="nav-item" data-target-url="teacher_reports.html"><i class="fas fa-chart-bar"></i><span>Reports</span></li>
+            </ul></nav>
+            <div class="header-user-controls"><div class="header-actions">
+                <button class="header-btn notification-btn"><i class="fas fa-bell"></i><span class="notification-badge">5</span></button>
+                <button class="header-btn profile-btn" onclick="openProfileMenu()"><i class="fas fa-chalkboard-teacher"></i></button>
+                <button class="header-btn logout-btn" onclick="logout()" id="logoutButton"><i class="fas fa-sign-out-alt"></i><span class="btn-text">Logout</span></button>
+            </div></div>
+        </header>
+        <main class="main-content">
+        <!-- Page Title & Metrics -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-1">Attendance Overview</h2>
+            <p class="text-md text-gray-500">Monitor student engagement and compliance for Fall Semester 2024.</p>
+        </div>
+        
+        <!-- Metric Cards Section -->
+        <div id="metric-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+            <!-- Metric Cards will be rendered here by JS -->
+        </div>
+        
+        <!-- Attendance Marking Tool -->
+        <div class="bg-white p-4 md:p-6 rounded-xl shadow-2xl border border-gray-100 mt-10">
+            <h3 class="text-xl font-semibold text-gray-700 mb-6 pb-3 border-b border-gray-100 flex items-center">
+                <i data-lucide="calendar-check" class="w-5 h-5 mr-2 text-indigo-500"></i> 
+                Daily Attendance Marking
+            </h3>
+
+            <!-- Date and Search Filter -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                <div class="flex-1">
+                    <label for="attendanceDate" class="text-sm font-medium text-gray-600 mb-1 block">Attendance Date</label>
+                    <input 
+                        type="date"
+                        id="attendanceDate"
+                        class="w-full py-2 px-3 text-sm border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition"
+                    />
+                </div>
+                <div class="flex-1 relative">
+                    <label for="searchQuery" class="text-sm font-medium text-gray-600 mb-1 block">Search Student</label>
+                    <input 
+                        type="text"
+                        id="searchQuery"
+                        placeholder="Search by Name or ID..."
+                        class="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition"
+                    />
+                    <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform translate-y-1/4"></i>
+                </div>
+            </div>
+
+            <!-- Attendance List Container -->
+            <div id="attendanceList" class="space-y-3 max-h-[50vh] overflow-y-auto pr-2 custom-scroll">
+                <!-- Student list items will be inserted here by JS -->
+            </div>
+
+            <!-- Submit Button and Message Area -->
+            <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end items-center space-x-4">
+                <span id="saveMessage" class="text-sm font-semibold transition-opacity duration-300"></span>
+                <button
+                    id="submitAttendance"
+                    class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition duration-200 disabled:opacity-50"
+                >
+                    Save Attendance
+                </button>
+            </div>
+        </div>
+                <footer class="footer"><div class="footer-teacher" ><div class="footer-section"><h3>Teacher Portal</h3><p>Empowering educators, inspiring students</p></div></div></footer>
+
+    </main>
+
+    <script>
+        // --- DATA AND INITIALIZATION ---
+
+        const MOCK_STUDENTS_LIST = [
+            { id: 'S0101', name: 'Alice Johnson', major: 'Comp. Science' },
+            { id: 'S0102', name: 'Bob Williams', major: 'Elec. Eng.' },
+            { id: 'S0103', name: 'Charlie Davis', major: 'Business Admin' },
+            { id: 'S0104', name: 'Diana Lee', major: 'Literature' },
+            { id: 'S0105', name: 'Ethan Hunt', major: 'Mech. Eng.' },
+            { id: 'S0106', name: 'Fiona Green', major: 'Art History' },
+            { id: 'S0107', name: 'George King', major: 'Physics' },
+            { id: 'S0108', name: 'Hannah Scott', major: 'Psychology' },
+            { id: 'S0109', name: 'Ivan Petrov', major: 'Chemistry' },
+            { id: 'S0110', name: 'Julia Chen', major: 'Mathematics' },
+        ];
+        
+        const METRIC_DATA = [
+            { title: 'Avg. Attendance', value: '86.4%', icon: 'calendar-check', colorClass: 'border-indigo-500', trend: { type: 'up', value: '+3.2%', icon: 'arrow-up' } },
+            { title: 'Critical Cases', value: '12 Students', icon: 'zap', colorClass: 'border-red-500', trend: { type: 'down', value: '-2', icon: 'arrow-down' } },
+            { title: 'Total Courses Monitored', value: '45', icon: 'book-open', colorClass: 'border-sky-500', trend: null },
+        ];
+
+        // State storage (mimics React useState)
+        let attendanceRecords = MOCK_STUDENTS_LIST.map(student => ({
+            ...student,
+            status: 'P' // Default status is Present (P)
+        }));
+        
+        // --- DOM REFERENCES ---
+
+        const dateInput = document.getElementById('attendanceDate');
+        const searchInput = document.getElementById('searchQuery');
+        const listContainer = document.getElementById('attendanceList');
+        const submitButton = document.getElementById('submitAttendance');
+        const messageArea = document.getElementById('saveMessage');
+        const metricCardsContainer = document.getElementById('metric-cards');
+
+        // --- HELPER FUNCTIONS ---
+
+        function getTodayDate() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        function updateState(studentId, newStatus) {
+            attendanceRecords = attendanceRecords.map(student =>
+                student.id === studentId ? { ...student, status: newStatus } : student
+            );
+            renderAttendanceList();
+        }
+        
+        function getStudentStatus(studentId) {
+            return attendanceRecords.find(s => s.id === studentId)?.status || 'P';
+        }
+
+        // --- RENDERING FUNCTIONS ---
+
+        function renderMetricCards() {
+            metricCardsContainer.innerHTML = METRIC_DATA.map(metric => {
+                const trendHtml = metric.trend ? `
+                    <span class="text-xs font-medium flex items-center p-1 rounded-full ${metric.trend.type === 'up' ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'}">
+                        <i data-lucide="${metric.trend.icon}" class="w-3 h-3 mr-1"></i>
+                        ${metric.trend.value}
+                    </span>
+                ` : '';
+
+                const iconColorClass = metric.colorClass.replace('border-', 'text-');
+
+                return `
+                    <div class="p-5 rounded-xl shadow-lg bg-white border-l-4 ${metric.colorClass} transition duration-300 hover:shadow-xl">
+                        <div class="flex justify-between items-center">
+                            <p class="text-sm font-medium text-gray-500 uppercase">${metric.title}</p>
+                            <i data-lucide="${metric.icon}" class="w-6 h-6 ${iconColorClass}"></i>
+                        </div>
+                        <div class="mt-2 flex justify-between items-end">
+                            <p class="text-3xl font-bold text-gray-900">${metric.value}</p>
+                            ${trendHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Re-render Lucide icons after HTML injection
+            lucide.createIcons();
+        }
+
+
+        function renderAttendanceList() {
+            const query = searchInput.value.toLowerCase();
+            
+            const filteredStudents = MOCK_STUDENTS_LIST.filter(student =>
+                student.name.toLowerCase().includes(query) ||
+                student.id.toLowerCase().includes(query)
+            );
+
+            if (filteredStudents.length === 0) {
+                listContainer.innerHTML = `
+                    <p class="text-center text-gray-500 p-8 text-lg font-medium">
+                        No students found matching <span class="text-indigo-600 font-bold">"${searchInput.value}"</span>.
+                    </p>
+                `;
+                submitButton.disabled = true;
+                return;
+            }
+            
+            submitButton.disabled = false;
+
+            listContainer.innerHTML = filteredStudents.map(student => {
+                const status = getStudentStatus(student.id);
+                
+                const presentBtnClass = status === 'P' 
+                    ? 'bg-green-600 text-white' 
+                    : 'bg-white text-green-600 border border-green-300 hover:bg-green-50';
+                
+                const absentBtnClass = status === 'A' 
+                    ? 'bg-red-600 text-white' 
+                    : 'bg-white text-red-600 border border-red-300 hover:bg-red-50';
+
+                return `
+                    <div class="flex flex-wrap items-center justify-between p-3 bg-indigo-50 rounded-lg shadow-sm hover:bg-indigo-100 transition duration-150" data-student-id="${student.id}">
+                        <div class="flex flex-col sm:flex-row sm:items-center space-x-0 sm:space-x-3">
+                            <span class="font-semibold text-indigo-700">${student.id}</span>
+                            <span class="font-medium text-gray-900">${student.name}</span>
+                            <span class="text-xs text-gray-500 hidden md:block">(${student.major})</span>
+                        </div>
+                        
+                        <div class="flex space-x-2 mt-2 sm:mt-0">
+                            <!-- Present Button -->
+                            <button
+                                data-action="P"
+                                class="px-3 py-1 text-xs font-bold rounded-full transition duration-200 flex items-center shadow-md ${presentBtnClass}"
+                            >
+                                <i data-lucide="user-check" class="w-4 h-4 mr-1"></i> Present
+                            </button>
+                            
+                            <!-- Absent Button -->
+                            <button
+                                data-action="A"
+                                class="px-3 py-1 text-xs font-bold rounded-full transition duration-200 flex items-center shadow-md ${absentBtnClass}"
+                            >
+                                <i data-lucide="user-x" class="w-4 h-4 mr-1"></i> Absent
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Re-render Lucide icons after HTML injection
+            lucide.createIcons();
+        }
+
+        // --- EVENT HANDLERS ---
+        
+        async function handleSubmitAttendance() {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Saving...';
+            messageArea.textContent = ''; // Clear previous message
+            messageArea.className = 'text-sm font-semibold transition-opacity duration-300';
+            
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 800)); 
+                
+                console.log(`Submitting attendance for ${dateInput.value}:`, attendanceRecords);
+                
+                messageArea.textContent = "Attendance Saved Successfully!";
+                messageArea.classList.add('text-green-600');
+
+            } catch (error) {
+                console.error("Error saving attendance:", error);
+                messageArea.textContent = "Error Saving Attendance!";
+                messageArea.classList.add('text-red-600');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = `Save Attendance for ${dateInput.value}`;
+
+                // Clear the status message after a few seconds
+                setTimeout(() => {
+                    messageArea.textContent = '';
+                    messageArea.className = 'text-sm font-semibold transition-opacity duration-300';
+                }, 3000); 
+            }
+        }
+
+        // Use event delegation for status buttons
+        function handleListClick(event) {
+            const button = event.target.closest('button');
+            if (!button) return;
+
+            const listItem = button.closest('[data-student-id]');
+            if (!listItem) return;
+
+            const studentId = listItem.getAttribute('data-student-id');
+            const newStatus = button.getAttribute('data-action');
+
+            if (studentId && newStatus) {
+                updateState(studentId, newStatus);
+            }
+        }
+
+
+        // --- SETUP ---
+        
+        function init() {
+            // Set initial date
+            dateInput.value = getTodayDate();
+            
+            // Initial render of all dynamic elements
+            renderMetricCards();
+            renderAttendanceList();
+            
+            // Update save button text on load
+            submitButton.textContent = `Save Attendance for ${dateInput.value}`;
+
+            // Add Event Listeners
+            searchInput.addEventListener('input', renderAttendanceList);
+            listContainer.addEventListener('click', handleListClick);
+            submitButton.addEventListener('click', handleSubmitAttendance);
+            dateInput.addEventListener('change', () => {
+                // Update button text when date changes
+                submitButton.textContent = `Save Attendance for ${dateInput.value}`;
+            });
+        }
+
+        // Start the application
+        window.onload = init;
+    </script>
+        </main>
+    </div>
+    <script src="script.js"></script>
+    <script>
+    (function(){
+        function uniq(arr){ return Array.from(new Set(arr.filter(Boolean))); }
+        function populateFilters(){
+            try{
+                var data=JSON.parse(localStorage.getItem('erp_students')||'[]');
+                var branches=uniq(data.map(function(x){return x.branch;}));
+                var courses=uniq([].concat.apply([], data.map(function(x){ return (x.subjects||[]).concat([x.course]).filter(Boolean); })));
+                var semesters=uniq(data.map(function(x){return String(x.semester);})).sort();
+                function fill(sel, items){ var el=document.getElementById(sel); if(!el) return; var cur=el.value; el.innerHTML='<option value="">All</option>'+items.map(function(v){return '<option>'+v+'</option>';}).join(''); if(cur&&items.indexOf(cur)>-1){ el.value=cur; } }
+                fill('fltBranch', branches);
+                fill('fltCourse', courses);
+                fill('fltSem', semesters);
+            }catch(e){}
+        }
+        populateFilters();
+        function badge(p){ if(p==null) return '<span class="badge badge-gray">N/A</span>'; if(p<50) return '<span class="badge badge-red">'+p+'%</span>'; if(p<75) return '<span class="badge badge-yellow">'+p+'%</span>'; return '<span class="badge badge-green">'+p+'%</span>'; }
+        function getData(){ return JSON.parse(localStorage.getItem('erp_students')||'[]'); }
+        function render(){
+            var data=getData();
+            var date=document.getElementById('attDate').value || new Date().toISOString().slice(0,10);
+            var records = JSON.parse(localStorage.getItem('erp_attendance')||'[]');
+            var b=document.getElementById('fltBranch').value||'';
+            var c=document.getElementById('fltCourse').value||'';
+            var s=document.getElementById('fltSem').value||'';
+            if(b) data=data.filter(function(x){return x.branch===b});
+            if(c) data=data.filter(function(x){return (x.course===c)||((x.subjects||[]).indexOf(c)>-1)});
+            if(s) data=data.filter(function(x){return String(x.semester)===String(s)});
+            var tb=document.getElementById('attendanceBody');
+            tb.innerHTML=data.map(function(st){
+                var sid = (st.studentId||st.rollNo||('-'+st.id));
+                var rec = records.find(function(r){ return String(r.studentId) === String(sid) && r.date === date; }) || null;
+                var selPresent = rec && (rec.status==='present' || rec.status==='Present') ? 'selected' : '';
+                var selAbsent = rec && (rec.status==='absent' || rec.status==='Absent') ? 'selected' : '';
+                var selLate = rec && (rec.status==='late' || rec.status==='Late') ? 'selected' : '';
+                return '<tr>'+
+                '<td>'+ sid +'</td>'+
+                '<td>'+(st.name||'-')+'</td>'+
+                '<td>'+(st.branch||'-')+'</td>'+
+                '<td>'+(st.course||'-')+'</td>'+
+                '<td>'+(st.semester||'-')+'</td>'+
+                '<td><select class="attSel">'+
+                    '<option value="present" '+selPresent+'>Present</option>'+
+                    '<option value="absent" '+selAbsent+'>Absent</option>'+
+                    '<option value="late" '+selLate+'>Late</option>'+
+                '</select></td>'+
+                '<td><button class="btn btn-sm btn-outline markBtn">Mark</button></td>'+
+                '</tr>';
+            }).join('');
+        }
+        ['fltBranch','fltCourse','fltSem'].forEach(function(id){ var el=document.getElementById(id); if(el){ el.addEventListener('change',render); }});
+        document.getElementById('btnSearchStudent').addEventListener('click', function(){
+            var q=(document.getElementById('searchStudentId').value||'').trim().toLowerCase();
+            var rows=[].slice.call(document.querySelectorAll('#attendanceBody tr'));
+            rows.forEach(function(r){ r.style.display = r.cells[0].innerText.toLowerCase().indexOf(q)>-1 ? '' : 'none'; });
+        });
+        document.getElementById('btnSaveAttendance').addEventListener('click', function(){
+            var date=document.getElementById('attDate').value || new Date().toISOString().slice(0,10);
+            var rows=[].slice.call(document.querySelectorAll('#attendanceBody tr'));
+            var records = JSON.parse(localStorage.getItem('erp_attendance')||'[]');
+            // Remove existing records for the date to avoid duplicates
+            records = records.filter(function(r){ return r.date !== date; });
+            rows.forEach(function(r){
+                var id=r.cells[0].innerText.trim();
+                var name=r.cells[1].innerText.trim();
+                var status=r.querySelector('.attSel').value;
+                records.push({ id: 'A-'+date+'-'+id, studentId:id, studentName:name, date:date, status:status, time: new Date().toTimeString().slice(0,5) });
+            });
+            localStorage.setItem('erp_attendance', JSON.stringify(records));
+            // attempt server save
+            try {
+                if (window.erpJsonApi && typeof window.erpJsonApi.saveData === 'function') {
+                    window.erpJsonApi.saveData('erp_attendance', records).catch(function(){/* ignore */});
+                }
+            } catch(e) { /* noop */ }
+            showMessage('Attendance saved for '+rows.length+' students', 'success');
+            // refresh global arrays
+            try{ loadDataFromStorage(); }catch(e){}
+        });
+        render();
+        document.querySelectorAll('.nav-item[data-target-url]').forEach(function(i){i.addEventListener('click',function(){var u=this.getAttribute('data-target-url');if(u){location.href=u;}})});
+    })();
+    </script>
+</body>
+</html>
+
+

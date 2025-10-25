@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student • LMS</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="user-student">
+    <div class="container">
+        <header class="header">
+            <div class="logo"><img src="assets/astra_logo.png" alt="Astra" style="height:40px;transform:scale(2.35);"></div>
+            <nav class="header-nav"><ul class="nav-menu">
+                <li class="nav-item" data-navigate="page" data-target-url="student.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></li>
+                <li class="nav-item" data-navigate="page" data-target-url="student_courses.html"><i class="fas fa-book"></i><span>My Courses</span></li>
+                <li class="nav-item" data-navigate="page" data-target-url="student_grades.html"><i class="fas fa-chart-line"></i><span>Grades</span></li>
+                <li class="nav-item" data-navigate="page" data-target-url="student_attendance.html"><i class="fas fa-calendar-check"></i><span>Attendance</span></li>
+                <li class="nav-item" data-navigate="page" data-target-url="student_assignments.html"><i class="fas fa-clipboard-list"></i><span>Assignments</span></li>
+                <li class="nav-item" data-navigate="page" data-target-url="student_schedule.html"><i class="fas fa-calendar-alt"></i><span>Schedule</span></li>
+                <li class="nav-item active" data-navigate="page" data-target-url="student_lms.html"><i class="fas fa-laptop-code"></i><span>LMS</span></li>
+            </ul></nav>
+            <div class="header-user-controls"><div class="header-actions">
+                <button class="header-btn notification-btn"><i class="fas fa-bell"></i><span class="notification-badge">2</span></button>
+                <button class="header-btn profile-btn" onclick="openProfileMenu()"><i class="fas fa-user-graduate"></i></button>
+                <button class="header-btn logout-btn" onclick="logout()" id="logoutButton"><i class="fas fa-sign-out-alt"></i><span class="btn-text">Logout</span></button>
+            </div></div>
+        </header>
+        <main class="main-content">
+            <div class="module-header"><h2>Learning Management System</h2></div>
+            <div class="subject-grid">
+                <div class="subject-card"><div class="subject-icon"><i class="fas fa-laptop-code"></i></div><h3>Computer Science</h3><p>Programming, Algorithms, Data Structures</p></div>
+                <div class="subject-card"><div class="subject-icon"><i class="fas fa-calculator"></i></div><h3>Mathematics</h3><p>Calculus, Algebra, Statistics</p></div>
+                <div class="subject-card"><div class="subject-icon"><i class="fas fa-calculator"></i></div><h3>DSA</h3><p>Calculus, Algebra, Statistics</p></div>
+                <div class="subject-card"><div class="subject-icon"><i class="fas fa-calculator"></i></div><h3>DBMS</h3><p>ER Digram</p></div>
+                <div class="subject-card"><div class="subject-icon"><i class="fas fa-calculator"></i></div><h3>ENGLISH</h3><p>Communication,Presentation</p></div>
+            </div>
+        </main>
+        <footer class="footer"><div class="footer-content"><div class="footer-section"><h3>Student Portal</h3><p>Your gateway to academic success</p></div></div></footer>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.querySelectorAll('.nav-item').forEach(function(item){
+            item.addEventListener('click', function(){
+                var url = this.getAttribute('data-target-url');
+                if(url){ window.location.href = url; }
+            });
+        });
+    </script>
+</body>
+</html>
+
+

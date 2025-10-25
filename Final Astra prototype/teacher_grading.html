@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher • Grading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="user-teacher">
+    <div class="container">
+        <header class="header">
+            <div class="logo"><img src="assets/astra_logo.png" alt="Astra" style="height:40px;transform:scale(2.35);"></div>
+            <nav class="header-nav"><ul class="nav-menu">
+                <li class="nav-item" data-target-url="teacher.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></li>
+                <li class="nav-item" data-target-url="teacher_classes.html"><i class="fas fa-chalkboard"></i><span>My Classes</span></li>
+                <li class="nav-item" data-target-url="teacher_students.html"><i class="fas fa-user-graduate"></i><span>Students</span></li>
+                <li class="nav-item active" data-target-url="teacher_grading.html"><i class="fas fa-edit"></i><span>Grading</span></li>
+                <li class="nav-item" data-target-url="teacher_attendance.html"><i class="fas fa-calendar-check"></i><span>Attendance</span></li>
+                <li class="nav-item" data-target-url="teacher_assignments.html"><i class="fas fa-clipboard-list"></i><span>Assignments</span></li>
+                <li class="nav-item" data-target-url="teacher_reports.html"><i class="fas fa-chart-bar"></i><span>Reports</span></li>
+            </ul></nav>
+            <div class="header-user-controls"><div class="header-actions">
+                <button class="header-btn notification-btn"><i class="fas fa-bell"></i><span class="notification-badge">5</span></button>
+                <button class="header-btn profile-btn" onclick="openProfileMenu()"><i class="fas fa-chalkboard-teacher"></i></button>
+                <button class="header-btn logout-btn" onclick="logout()" id="logoutButton"><i class="fas fa-sign-out-alt"></i><span class="btn-text">Logout</span></button>
+            </div></div>
+        </header>
+        <main class="main-content">
+            <div class="module-header"><h2>Grading Center</h2></div>
+            <div class="grading-summary"><div class="grading-stats"><div class="grading-stat"><h4 id="pendingAssignmentsCount">0</h4><p>Pending Assignments</p></div><div class="grading-stat"><h4 id="totalSubmissionsCount">0</h4><p>Total Submissions</p></div><div class="grading-stat"><h4 id="averageGrade">0</h4><p>Average Grade</p></div></div></div>
+
+            <div class="info-card" style="margin-top:1rem;">
+                <h4>Add / Update Marks</h4>
+                <div class="key-value">
+                    <div class="key">Student</div><div class="val"><select id="gradeStudentSelect"></select></div>
+                    <div class="key">Exam</div><div class="val"><input type="text" id="gradeExamName" placeholder="Midterm / Quiz 1"></div>
+                    <div class="key">Subject</div><div class="val"><input type="text" id="gradeSubject" placeholder="CS101"></div>
+                    <div class="key">Marks</div><div class="val"><input type="number" id="gradeMarks" min="0" max="100"></div>
+                    <div class="key">Date</div><div class="val"><input type="date" id="gradeDate"></div>
+                    <div class="key">&nbsp;</div><div class="val"><button class="btn btn-primary" id="btnAddGrade">Save Mark</button></div>
+                </div>
+            </div>
+
+            <div class="table-container" style="margin-top:1rem;"><table class="data-table">
+                <thead><tr><th>ID</th><th>Student</th><th>Exam</th><th>Subject</th><th>Marks</th><th>Date</th><th>Action</th></tr></thead>
+                <tbody id="examTableBody"></tbody></table></div>
+        </main>
+        <footer class="footer"><div class="footer-content"><div class="footer-section"><h3>Teacher Portal</h3><p>Empowering educators, inspiring students</p></div></div></footer>
+    </div>
+    <script src="script.js"></script>
+    <script>document.querySelectorAll('.nav-item[data-target-url]').forEach(function(i){i.addEventListener('click',function(){var u=this.getAttribute('data-target-url');if(u){location.href=u;}})});</script>
+</body>
+</html>
+
+
